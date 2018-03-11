@@ -98,3 +98,12 @@ gcloud app deploy
 npm start
 gcloud app deploy
 git init
+git add .
+git commit -m "First commit"
+git config --global user.email "theologue@gmail.com"
+git config --global user.name "Nicholas Hall"
+git commit -m "First commit"
+git remote add origin https://github.com/smokejaguar89/unknown-globe.git
+git remote -v
+git push -u origin master
+git commit -m "Security patches"
