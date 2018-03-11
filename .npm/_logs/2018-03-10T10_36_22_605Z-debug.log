@@ -1,0 +1,16 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/nvm/versions/node/v8.9.4/bin/node',
+1 verbose cli   '/usr/bin/npm',
+1 verbose cli   'start' ]
+2 info using npm@5.6.0
+3 info using node@v8.9.4
+4 verbose run-script [ 'prestart', 'start', 'poststart' ]
+5 info lifecycle unknown_globe@0.0.1~prestart: unknown_globe@0.0.1
+6 info lifecycle unknown_globe@0.0.1~start: unknown_globe@0.0.1
+7 verbose lifecycle unknown_globe@0.0.1~start: unsafe-perm in lifecycle true
+8 verbose lifecycle unknown_globe@0.0.1~start: PATH: /usr/local/nvm/versions/node/v8.9.4/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/home/theologue/src/unknown-globe/blog/app/node_modules/.bin:/home/theologue/gopath/bin:/google/gopath/bin:/google/google-cloud-sdk/bin:/usr/local/go/bin:/opt/gradle/bin:/opt/maven/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin::/google/go_appengine:/google/google_appengine
+9 verbose lifecycle unknown_globe@0.0.1~start: CWD: /home/theologue/src/unknown-globe/blog/app
+10 silly lifecycle unknown_globe@0.0.1~start: Args: [ '-c', 'node app.js' ]
+11 error cb() never called!
+12 error This is an error with npm itself. Please report this error at:
+13 error <https://github.com/npm/npm/issues>

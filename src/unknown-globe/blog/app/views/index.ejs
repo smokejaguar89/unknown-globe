@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Unknown Globe</title>
+
+  <!-- Dependencies -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Dhurjati|Roboto" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/css/spinner.css">
+
+  <!-- Data Structures -->
+  <script type="text/javascript" src="/models/models.js"></script>
+
+</head>
+
+<body>
+
+  <div class="header depth-1">
+    <div class="header-container">
+    
+      <div class="header-title">
+        un<span style="color:#FF5252">known</span>globe
+      </div>
+
+      <div class="header-loading-icon depth-1" id="header-icon">
+        <img src="assets/globe.svg" class="globe-icon" id="globe-icon" alt="globe"/>
+        <div class="spinner" id="spinner">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+      </div>
+         
+    </div>
+  </div>
+  
+  <div class="cover-image depth-1">
+    <div class="cover-image-caption depth-1">
+      <div class="cover-image-caption-img">
+        <div class="cover-image-caption-img-ball depth-1">
+          <img src="/assets/pointer.png" width=100% height=100% />
+        </div>
+      </div>
+      <div class="cover-image-caption-text">
+        Litang, People's Republic of China
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="content-container">
+      <div class="content-title" id="post-title">
+        <%= latestPost.data.title %>
+      </div>
+      <div class="content" id="post-content">
+        <%- latestPost.data.content.en %>
+      </div>
+    </div>
+
+    <div class="stack" id="stack">
+    
+      <% posts.forEach(function(post, i) { %>
+      
+        <% if (i == 0) { %>
+      
+        <div class="card alpha depth-2" id="alpha" style="z-index:<%= posts.length %>" postId="<%= post.id %>">
+          <div class="card-title-container">
+            <div class="card-title">
+              <%= post.data.title %>
+              <div class="card-subtitle">
+                <%= post.data.category %>
+              </div>
+            </div>
+            <div class="date">
+              <%= post.data.dateString %>
+            </div>
+          </div>
+          <div class="card-img" style="background-image: url('assets/<%= post.data.image %>')">
+            <div class="card-img-overlay">
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="lang" lang="en">ENGLISH</div>
+            <div class="lang" lang="pl">POLSKI</div>
+            <div class="lang" lang="pt">PORTUGUÊS</div>
+          </div>
+        </div>
+        
+        <% } else { %>
+
+        <div class="card beta depth-1" style="z-index:<%= posts.length - i %>" postId="<%= post.id %>"">
+          <div class="card-title-container">
+            <div class="img-ball depth-1" style="background-image:url('assets/<%= post.data.image %>')"></div>
+            <div class="card-title">
+              <%= post.data.title %>
+              <div class="card-subtitle">
+                <%= post.data.category %>
+              </div>
+            </div>
+            <div class="date">
+              <%= post.data.dateString %>
+            </div>
+          </div>
+        </div>
+        
+      <% }}); %>
+
+    </div>
+
+  </div>
+  
+  <!-- Frontend Helper Functions -->
+  <script type="text/javascript" src="/js/helper_classes.js"></script>
+  <script>
+    (function() {
+      let postHelper = new PostHelper(<%latestPost, posts %>);
+      postHelper.addEventListeners();
+    })();
+  </script
+
+</body>
+
+</html>
