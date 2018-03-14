@@ -1,0 +1,332 @@
+    body {
+      background-color: #fafafa;
+      font-family: 'Roboto', sans-serif;
+      color:#333333;
+      padding:0;
+      margin:0;
+    }
+    
+    a {
+      text-decoration:none;
+      color:#333333;
+    }
+
+    .header {
+      position: fixed;
+      left:0;
+      top:0;
+      z-index:3;
+      height:46px;
+      width:100%;
+      background-color: #333333;
+    }
+    
+      .header-container {
+      	position:relative;
+      	width:1200px;
+      	height:100%;
+      	margin:auto;
+      	display:flex;
+      	justify-content:space-between;
+      }
+
+      .header-title {
+        position:relative;
+        font-size:16px;
+        color:white;
+        line-height:46px;
+        float:left;
+      }
+
+      .globe-icon {
+        position:absolute;
+        top:4px;
+        left:4px;
+        width:28px;
+        height:28px;
+      }
+
+      .header-loading-icon {
+        position:relative;
+        display:block;
+        margin-top:5px;
+        background-color:white;
+        height:36px;
+        width:36px;
+        border-radius:36px;
+      }
+
+    .footer {
+    	position:relative;
+    	width:100%;
+    	background-color: #333333;
+    	display:flex;
+    	overflow:auto;
+    }
+    
+      .footer-section {
+        flex:1;
+      }
+      
+        .about-me-container {
+          margin:40px;
+          background-color:white;
+          width:360px;
+          overflow:auto;
+          border-radius:2px;
+        }
+        
+          .about-me-title-container {
+          	width:calc(100%-40px);
+          	padding:20px;
+          	padding-bottom:0;
+            overflow:auto;
+          }
+        
+          .about-me-img-container {
+          	width:calc(20%-16px);
+          	padding:8px;
+          	float:left;
+          }
+          
+            .about-me-img {
+			  height:60px;
+              width:60px;
+              border-radius:60px;
+              background-image:url('https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAp_AAAAJGJiNTc0ZDczLWI3NGUtNDZmYi04NzFkLTc4MjA0NWZmMzAxOQ.jpg');
+              background-position:center;
+              background-size:cover;      
+            }
+          
+          .about-me-title {
+          	width:calc(80%-16px);
+          	padding:8px;
+          	float:left;
+          	font-size:22px;
+          	line-height:22px;
+          }
+          
+          .about-me-content {
+          	width:calc(100%-40px);
+          	padding:20px;
+          	padding-top:0;
+          	padding-bottom:0;
+          	font-size:14px;
+          	overflow:auto;
+          	color:#444444;
+          	flex:4;
+          }
+          
+          .about-me-footer {
+            width:100%;
+            display:flex;
+            overflow:auto;
+            background-color:#fafafa;
+          }
+          
+            .about-me-footer-section {
+              padding:20px;
+              flex:1;
+              text-align:center;
+            }
+    
+    .cover-image {
+      z-index:1;
+      width:100%;
+      height:480px;
+      float:left;
+      position:relative;
+      background-color:#FF5252;
+      background-image:url('../assets/litang.JPG');
+      background-size:cover;
+      background-position:center bottom;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+    
+      .cover-image-caption {
+        z-index:2;
+        width:168px;
+        border-radius:2px;
+        height:28px;
+        padding:16px;
+        position:absolute;
+        top:80px;
+        right:40px;
+        font-size:12px;
+        display:flex;
+        background-color:white;
+      }
+      
+        .cover-image-caption-img {
+          flex:1;
+        }
+        
+          .cover-image-caption-img-ball {
+            height:20px;
+            width:20px;
+            border-radius:28px;
+            padding:4px;
+          }
+        
+        .cover-image-caption-text {
+          flex:3;
+        }
+
+    .container {
+      z-index:2;
+      width:100%;
+      position:absolute;
+      top:300px;
+      overflow: auto;
+      margin-top:40px;
+    }
+    
+    .core-content {
+      display:flex;
+      overflow:auto;
+      width:1200px;
+      margin:auto;
+    }
+
+    .content-container {
+      float:left;
+      flex:7;
+      width:800px;
+      padding:20px;
+      overflow:auto;
+    }
+
+    .content-title {
+      font-size:48px;
+      text-align: left;
+      height:120px;
+      line-height:120px;
+      color:white;
+    }
+
+    .content {
+      padding-top:40px;
+      font-size:16px;
+      overflow:auto;
+      color:#666666;
+    }
+
+    .stack {
+      position:relative;
+      padding:20px;
+      padding-top:0px;
+      flex:3;
+      padding-bottom:120px;
+      overflow:auto;
+      float:left;
+    }
+
+    .card {
+      border-radius: 0 0 2px 2px;
+      background-color:white;
+      transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+
+    .narrow-width {
+      width:320px;
+    }
+
+    .wide-width {
+      width:1020px;
+    }
+
+    .card-title-container {
+      position: relative;
+      padding:20px;
+      font-size:14px;
+      overflow:auto;
+    }
+
+      .card-title {
+        float:left;
+        height:32px;
+        padding:4px;
+        font-size:14px;
+        vertical-align:middle;
+      }
+
+        .card-subtitle {
+      	  color:#999999;
+      	  font-size:14px;
+        }
+
+      .img-ball {
+        height:40px;
+        width:40px;
+        border-radius:20px;
+        margin-right:10px;
+        float:left;
+        background-position: center;
+        background-size: cover;
+      }
+
+      .date {
+      	position:absolute;
+      	right:0;
+      	top:0;
+      	padding:10px;
+      	font-size:10px;
+      	color:#999999;
+      }
+    
+    .alpha {
+      position:relative;
+      overflow:auto;
+      z-index:4;
+    }
+
+    .beta {
+      height:80px;
+      cursor:pointer;
+      position:relative;
+    }
+
+    .card-img {
+      position:relative;
+      background-position: center;
+      background-size: cover;
+      width:100%;
+      height:180px;
+      z-index:1;
+    }
+
+    .card-text {
+      padding:20px;
+      overflow:auto;
+      font-size:14px;
+    }
+
+    .card-footer {
+      padding:20px;
+      height:20px;
+      color:#999999;
+      font-size:14px;
+      cursor:pointer;
+    }
+
+    .lang {
+      float:left;
+      overflow:auto;
+      width:80px;
+      margin-right:10px;
+      transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+
+    .lang:hover {
+      transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+      color:black;
+    }
+
+    .depth-1 {
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    }
+
+    .depth-2 {
+      box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    }
