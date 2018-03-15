@@ -57,11 +57,11 @@
       }
 
     .footer {
-    	position:relative;
-    	width:100%;
-    	background-color: #333333;
-    	display:flex;
-    	overflow:auto;
+      position:relative;
+      width:100%;
+      background-color: #333333;
+      display:flex;
+      overflow:auto;
     }
     
       .footer-section {
@@ -77,20 +77,20 @@
         }
         
           .about-me-title-container {
-          	width:calc(100%-40px);
-          	padding:20px;
-          	padding-bottom:0;
+            width:calc(100%-40px);
+            padding:20px;
+            padding-bottom:0;
             overflow:auto;
           }
         
           .about-me-img-container {
-          	width:calc(20%-16px);
-          	padding:8px;
-          	float:left;
+            width:calc(20%-16px);
+            padding:8px;
+            float:left;
           }
           
             .about-me-img {
-			  height:60px;
+              height:60px;
               width:60px;
               border-radius:60px;
               background-image:url('https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAp_AAAAJGJiNTc0ZDczLWI3NGUtNDZmYi04NzFkLTc4MjA0NWZmMzAxOQ.jpg');
@@ -99,22 +99,22 @@
             }
           
           .about-me-title {
-          	width:calc(80%-16px);
-          	padding:8px;
-          	float:left;
-          	font-size:22px;
-          	line-height:22px;
+            width:calc(80%-16px);
+            padding:8px;
+            float:left;
+            font-size:22px;
+            line-height:22px;
           }
           
           .about-me-content {
-          	width:calc(100%-40px);
-          	padding:20px;
-          	padding-top:0;
-          	padding-bottom:0;
-          	font-size:14px;
-          	overflow:auto;
-          	color:#444444;
-          	flex:4;
+            width:calc(100%-40px);
+            padding:20px;
+            padding-top:0;
+            padding-bottom:0;
+            font-size:14px;
+            overflow:auto;
+            color:#444444;
+            flex:4;
           }
           
           .about-me-footer {
