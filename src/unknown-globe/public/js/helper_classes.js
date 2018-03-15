@@ -107,7 +107,7 @@ class PostHelper {
    * @return {string} Time in human-readable format.
    */
   timeConverter(rawTime) {
-  	let a = new Date(rawTime);
+    let a = new Date(rawTime);
     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     let year = a.getFullYear();
     let month = months[a.getMonth()];
