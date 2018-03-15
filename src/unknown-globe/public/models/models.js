@@ -4,15 +4,15 @@
 class PostSnippet {
   constructor(id, date, dateString, image, title, category) {
     this.id = id;
-  	this.date = date;
-  	this.dateString = dateString;
-  	this.image = image;
-  	this.title = title;
-  	this.category = category;
+    this.date = date;
+    this.dateString = dateString;
+    this.image = image;
+    this.title = title;
+    this.category = category;
   }
 
   getTitle() {
-  	return this.title;
+    return this.title;
   }
 }
 
@@ -21,14 +21,14 @@ class PostSnippet {
 */
 class Post extends PostSnippet {
   constructor(id, date, dateString, image, title, category, content) {
-  	super();
-  	this.id = id;
-  	this.date = date;
-  	this.dateString = dateString;
-  	this.image = image;
-  	this.title = title;
-  	this.category = category;
-  	this.content = content;
+    super();
+    this.id = id;
+    this.date = date;
+    this.dateString = dateString;
+    this.image = image;
+    this.title = title;
+    this.category = category;
+    this.content = content;
   }
 
   getContentByLanguage(lang) {
