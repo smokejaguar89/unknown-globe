@@ -1,5 +1,6 @@
 // [START app]
 /*eslint-disable no-unused-params */
+/*eslint-env node */
 'use strict';
 
 // [START setup]
@@ -42,11 +43,11 @@ function getPosts() {
       const entities = results[0];
       return entities.map((entity) => {
         return new PostSnippet(
-            entity[datastore.KEY].id,
-        	entity.date,
-       	    entity.image,
-      	    entity.title,
-      	    entity.category
+          entity[datastore.KEY].id,
+          entity.date,
+       	  entity.image,
+      	  entity.title,
+      	  entity.category
         );
       });
     });
@@ -65,14 +66,14 @@ function getPostById(id) {
     .then((results) => {
       let entity = results[0][0];
       return new Post(
-          entity[datastore.KEY].id,
-      	  entity.date,
-      	  entity.image,
-      	  entity.title,
-      	  entity.category,
-      	  entity.en,
-      	  entity.pl,
-      	  entity.pt
+        entity[datastore.KEY].id,
+      	entity.date,
+      	entity.image,
+      	entity.title,
+      	entity.category,
+      	entity.en,
+      	entity.pl,
+      	entity.pt
       );
     });
 }
@@ -90,14 +91,14 @@ function getLatestPost() {
     .then((results) => {
       let entity = results[0][0];
       return new Post(
-          entity[datastore.KEY].id,
-      	  entity.date,
-      	  entity.image,
-      	  entity.title,
-      	  entity.category,
-      	  entity.en,
-      	  entity.pl,
-      	  entity.pt
+        entity[datastore.KEY].id,
+      	entity.date,
+      	entity.image,
+      	entity.title,
+      	entity.category,
+      	entity.en,
+      	entity.pl,
+      	entity.pt
       );
     });
 }

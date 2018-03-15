@@ -262,13 +262,13 @@ class PostHelper {
         
         // Current Post
       	this.currentPost = new Post(
-            post.id,
-            post.data.date,
-            post.data.dateString,
-            post.data.image,
-            post.data.title,
-            post.data.category,
-            post.data.content
+          post.id,
+          post.data.date,
+          post.data.dateString,
+          post.data.image,
+          post.data.title,
+          post.data.category,
+          post.data.content
           );        
         
         this.printPost(this.currentPost, lang);
