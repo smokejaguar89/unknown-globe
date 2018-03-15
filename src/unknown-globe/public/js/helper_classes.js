@@ -11,7 +11,7 @@ class HttpHelper {
    * @return {string} Query string.
    */
   buildQueryString(data) {
-  	if (Object.keys(data).length > 0) {
+    if (Object.keys(data).length > 0) {
       return '?' + Object.keys(data).map(function(key) {
         return [key, data[key]].map(encodeURIComponent).join("=");
       }).join("&");
@@ -60,14 +60,14 @@ class PostHelper {
    * @return {Array<Post>} Posts returned from API.
    */
   getPosts(params={}) {
-  	if (typeof this.snippets !== 'undefined') {
-  	  return new Promise((resolve) => {
-  	    resolve(this.snippets);
-  	  });
-  	} else {
+    if (typeof this.snippets !== 'undefined') {
+      return new Promise((resolve) => {
+        resolve(this.snippets);
+      });
+    } else {
       let BASE_URI = 'https://unknown-globe.appspot.com/getposts/';
-  	
-  	  return new Promise((resolve, reject) => {
+
+      return new Promise((resolve, reject) => {
         let httpHelper = new HttpHelper();
         httpHelper.get(BASE_URI, params)
           .then((resp) => {
@@ -86,10 +86,10 @@ class PostHelper {
    * @return {Post} Post returned from API.
    */
   getPostById(id) {
-  	let BASE_URI = 'https://unknown-globe.appspot.com/getpost/';
-  	let params = { 'id' : id };
+    let BASE_URI = 'https://unknown-globe.appspot.com/getpost/';
+    let params = { 'id' : id };
   	
-  	return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let httpHelper = new HttpHelper();
       httpHelper.get(BASE_URI, params)
         .then((resp) => {
@@ -98,7 +98,7 @@ class PostHelper {
         .catch((e) => {
           reject(e);
         });
-  	});
+    });
   }
 
   /**

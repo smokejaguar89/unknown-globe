@@ -3,18 +3,18 @@
 */
 class PostSnippet {
   constructor(id, date, image, title, categoryId) {
-  	this.id = id;
-  	this.data = {
-  	  date: new Date(date).getTime(),
-  	  dateString: this.timeConverter(new Date(date).getTime()),
-  	  image: image,
-  	  title: title,
-  	  category: this.getCategoryByEnum(categoryId)
+    this.id = id;
+    this.data = {
+      date: new Date(date).getTime(),
+      dateString: this.timeConverter(new Date(date).getTime()),
+      image: image,
+      title: title,
+      category: this.getCategoryByEnum(categoryId)
   	};
   }
 
   getTitle() {
-  	return this.title;
+    return this.title;
   }
   
   /**
@@ -33,12 +33,12 @@ class PostSnippet {
   }
 
   getCategoryByEnum(categoryId) {
-  	let categories = {
-  	  1 : 'Thoughts',
-  	  2 : 'Travel',
-  	  3 : 'Tech'
-  	};
-  	return categories[categoryId];
+    let categories = {
+      1 : 'Thoughts',
+      2 : 'Travel',
+      3 : 'Tech'
+    };
+    return categories[categoryId];
   }
 }
 
@@ -47,20 +47,20 @@ class PostSnippet {
 */
 class Post extends PostSnippet {
   constructor(id, date, image, title, categoryId, en, pt, pl) {
-  	super();
-  	this.id = id;
-  	this.data = {
-  	  date: new Date(date).getTime(),
-  	  dateString: this.timeConverter(new Date(date).getTime()),
-  	  image: image,
-  	  title: title,
-  	  category: this.getCategoryByEnum(categoryId),
-  	  content: {
-  	    'en': en,
-  	    'pl': pl,
-  	    'pt': pt
-  	  }
-  	};
+    super();
+    this.id = id;
+    this.data = {
+      date: new Date(date).getTime(),
+      dateString: this.timeConverter(new Date(date).getTime()),
+      image: image,
+      title: title,
+      category: this.getCategoryByEnum(categoryId),
+      content: {
+        'en': en,
+        'pl': pl,
+        'pt': pt
+      }
+    };
   }
 }
 

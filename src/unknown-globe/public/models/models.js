@@ -3,7 +3,7 @@
 */
 class PostSnippet {
   constructor(id, date, dateString, image, title, category) {
-  	this.id = id;
+    this.id = id;
   	this.date = date;
   	this.dateString = dateString;
   	this.image = image;
