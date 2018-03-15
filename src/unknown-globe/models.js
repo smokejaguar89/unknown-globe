@@ -34,9 +34,9 @@ class PostSnippet {
 
   getCategoryByEnum(categoryId) {
   	let categories = {
-  		1 : 'Thoughts',
-  		2 : 'Travel',
-  		3 : 'Tech'
+  	  1 : 'Thoughts',
+  	  2 : 'Travel',
+  	  3 : 'Tech'
   	};
   	return categories[categoryId];
   }
@@ -63,3 +63,8 @@ class Post extends PostSnippet {
   	};
   }
 }
+
+module.exports = {
+  PostSnippet: PostSnippet,
+  Post : Post
+};
