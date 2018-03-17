@@ -1,4 +1,14 @@
 /*eslint-disable no-else-return */
+class GoogleTagManagerHelper {
+
+  constructor() {}
+  
+  triggerEvent(event, params) {
+  	dataLayer.push(params);
+    dataLayer.push({'event' : event });
+  }
+}
+
 class HttpHelper {
 
   constructor() {
@@ -260,7 +270,7 @@ class PostHelper {
         let post = resp[0];
         let posts = resp[1];
         
-        // Current Post
+        // Assigns retrieved post to member variable currentPost
       	this.currentPost = new Post(
           post.id,
           post.data.date,
@@ -269,11 +279,21 @@ class PostHelper {
           post.data.title,
           post.data.category,
           post.data.content
-          );        
+          );
+
+        // Fires GTM tag
+        let googleTagManagerHelper = new GoogleTagManagerHelper();
+        let params = {
+          postId : this.currentPost.id,
+          postTitle : this.currentPost.title,
+          postLanguage : lang,
+        };
+        googleTagManagerHelper.triggerEvent('post', params);
         
+        // Prints post on page
         this.printPost(this.currentPost, lang);
 
-        // Snippets
+        // Post Snippets
         this.snippets = posts;
       	let cards = this.buildCards(this.sortPostSnippets(this.snippets, pivot));
       	this.layCards(cards);

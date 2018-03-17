@@ -46,7 +46,7 @@ class PostSnippet {
   Post Class
 */
 class Post extends PostSnippet {
-  constructor(id, date, image, title, categoryId, en, pt, pl) {
+  constructor(id, date, image, title, categoryId, en, pl, pt) {
     super();
     this.id = id;
     this.data = {

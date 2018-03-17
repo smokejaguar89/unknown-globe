@@ -8,8 +8,9 @@ const express = require('express');
 const app = express();
 
 // Import Models
-const Post = require('./models').Post;
-const PostSnippet = require('./models').PostSnippet;
+const models = require('./models');
+const Post = models.Post;
+const PostSnippet = models.PostSnippet;
 
 // Sets template engine
 app.set('view engine', 'ejs');

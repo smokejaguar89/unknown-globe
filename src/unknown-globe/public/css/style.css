@@ -64,14 +64,18 @@
       overflow:auto;
     }
     
-      .footer-section {
+      .footer-section-narrow {
         flex:1;
+      }
+      
+      .footer-section-wide {
+        flex:2;
       }
       
         .about-me-container {
           margin:40px;
           background-color:white;
-          width:360px;
+          width:calc(100%-80px);
           overflow:auto;
           border-radius:2px;
         }

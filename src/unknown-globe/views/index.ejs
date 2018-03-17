@@ -6,6 +6,29 @@
   <title>Unknown Globe</title>
   <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
   <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
+  
+  <!-- Google Tag Manager Data Layer -->
+  <script>
+    dataLayer = [{
+      'postId' : <%= latestPost.id %>,
+      'postTitle' : '<%= latestPost.data.title %>',
+      'postLanguage' : 'en'
+    }]
+  </script>
+  
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-PHC3SSJ');</script>
+  <!-- End Google Tag Manager -->
+  
+  <!-- Data Models -->
+  <script type="text/javascript" src="/models/models.js"></script>
+  
+  <!-- Frontend Helper Functions -->
+  <script type="text/javascript" src="/js/helper_classes.js"></script>
 
   <!-- Dependencies -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -15,12 +38,14 @@
   <link rel="stylesheet" type="text/css" href="/css/style.css">
   <link rel="stylesheet" type="text/css" href="/css/spinner.css">
 
-  <!-- Data Structures -->
-  <script type="text/javascript" src="/models/models.js"></script>
-
 </head>
 
 <body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PHC3SSJ"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   <div class="header depth-1">
     <div class="header-container">
@@ -58,75 +83,70 @@
 
   <div class="container">
   
-  <div class="core-content">
+    <div class="core-content">
 
-    <div class="content-container">
-      <div class="content-title" id="post-title">
-        <%= latestPost.data.title %>
+      <div class="content-container">
+        <div class="content-title" id="post-title">
+          <%= latestPost.data.title %>
+        </div>
+        <div class="content" id="post-content">
+          <%- latestPost.data.content.en %>
+        </div>
       </div>
-      <div class="content" id="post-content">
-        <%- latestPost.data.content.en %>
-      </div>
-    </div>
 
-    <div class="stack" id="stack">
+      <div class="stack" id="stack">
     
-      <% posts.forEach(function(post, i) { %>
+        <% posts.forEach(function(post, i) { %>
       
-        <% if (i == 0) { %>
+          <% if (i == 0) { %>
       
-        <div class="card alpha depth-2" id="alpha" style="z-index:<%= posts.length %>" postId="<%= post.id %>">
-          <div class="card-title-container">
-            <div class="card-title">
-              <%= post.data.title %>
-              <div class="card-subtitle">
-                <%= post.data.category %>
+          <div class="card alpha depth-2" id="alpha" style="z-index:<%= posts.length %>" postId="<%= post.id %>">
+            <div class="card-title-container">
+              <div class="card-title">
+                <%= post.data.title %>
+                <div class="card-subtitle">
+                  <%= post.data.category %>
+                </div>
+              </div>
+              <div class="date">
+                <%= post.data.dateString %>
               </div>
             </div>
-            <div class="date">
-              <%= post.data.dateString %>
-            </div>
-          </div>
-          <div class="card-img" style="background-image: url('assets/<%= post.data.image %>')">
-            <div class="card-img-overlay">
-            </div>
-          </div>
-          <div class="card-footer">
-            <div class="lang" lang="en">ENGLISH</div>
-            <div class="lang" lang="pl">POLSKI</div>
-            <div class="lang" lang="pt">PORTUGUÊS</div>
-          </div>
-        </div>
-        
-        <% } else { %>
-
-        <div class="card beta depth-1" style="z-index:<%= posts.length - i %>" postId="<%= post.id %>">
-          <div class="card-title-container">
-            <div class="img-ball depth-1" style="background-image:url('assets/<%= post.data.image %>')"></div>
-            <div class="card-title">
-              <%= post.data.title %>
-              <div class="card-subtitle">
-                <%= post.data.category %>
+            <div class="card-img" style="background-image: url('assets/<%= post.data.image %>')">
+              <div class="card-img-overlay">
               </div>
             </div>
-            <div class="date">
-              <%= post.data.dateString %>
+            <div class="card-footer">
+              <div class="lang" lang="en">ENGLISH</div>
+              <div class="lang" lang="pl">POLSKI</div>
+              <div class="lang" lang="pt">PORTUGUÊS</div>
             </div>
           </div>
-        </div>
         
-      <% }}); %>
+          <% } else { %>
 
+          <div class="card beta depth-1" style="z-index:<%= posts.length - i %>" postId="<%= post.id %>">
+            <div class="card-title-container">
+              <div class="img-ball depth-1" style="background-image:url('assets/<%= post.data.image %>')"></div>
+              <div class="card-title">
+                <%= post.data.title %>
+                <div class="card-subtitle">
+                  <%= post.data.category %>
+                </div>
+              </div>
+              <div class="date">
+                <%= post.data.dateString %>
+              </div>
+            </div>
+          </div>
+        
+        <% }}); %>
+
+      </div>
     </div>
-  </div>
   
-
     <div class="footer">
-      <div class="footer-section">
-      </div>
-      <div class="footer-section">
-      </div>
-      <div class="footer-section">
+      <div class="footer-section-narrow">
         <div class="about-me-container depth-2">
           <div class="about-me-title-container">
             <div class="about-me-img-container">
@@ -168,13 +188,13 @@
               </div>
           </div>
         </div>
-      </div>      
+      </div> 
+      <div class="footer-section-wide">
+      </div>
     </div>
 
   </div>
   
-  <!-- Frontend Helper Functions -->
-  <script type="text/javascript" src="/js/helper_classes.js"></script>
   <script>
     (function() {
       let postHelper = new PostHelper(<%latestPost, posts %>);
