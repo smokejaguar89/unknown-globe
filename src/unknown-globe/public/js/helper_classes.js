@@ -1,11 +1,14 @@
 /*eslint-disable no-else-return */
 class GoogleTagManagerHelper {
 
-  constructor() {}
+  constructor() {
+    this.event;
+    this.params;
+  }
   
-  triggerEvent(event, params) {
-  	dataLayer.push(params);
-    dataLayer.push({'event' : event });
+  fireTag() {
+  	dataLayer.push(this.params);
+    dataLayer.push({'event' : this.event });
   }
 }
 
@@ -81,7 +84,7 @@ class PostHelper {
         let httpHelper = new HttpHelper();
         httpHelper.get(BASE_URI, params)
           .then((resp) => {
-            resolve(resp);
+            resolve(resp.message);
           })
           .catch((e) => {
             reject(e);
@@ -103,7 +106,7 @@ class PostHelper {
       let httpHelper = new HttpHelper();
       httpHelper.get(BASE_URI, params)
         .then((resp) => {
-          resolve(resp);
+          resolve(resp.message);
         })
         .catch((e) => {
           reject(e);
@@ -112,12 +115,12 @@ class PostHelper {
   }
 
   /**
-   * Converts UNIX Timestamp to human-readable format.
-   * @param {number} UNIX_timestamp
+   * Converts UNIX timestamp to human-readable format.
+   * @param {number} timestamp UNIX timestamp.
    * @return {string} Time in human-readable format.
    */
-  timeConverter(rawTime) {
-    let a = new Date(rawTime);
+  timeConverter(timestamp) {
+    let a = new Date(timestamp);
     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     let year = a.getFullYear();
     let month = months[a.getMonth()];
@@ -143,10 +146,10 @@ class PostHelper {
   }
 
   /**
-   * Moves item at position <pivot> to beginning of array <posts> and orders
+   * Moves item at position <pivot> to beginning of array <postSnippets> and orders
    *  remaining posts by date
    * @param {Array<PostSnippet>} postSnippets Post snippets to be shuffled.
-   * @param {number} pivot Position of the post to move to front of posts.
+   * @param {number} pivot Position of the post to move to front of postSnippets.
    * @return {Array<PostSnippet>} Shuffled post snippets.
    */
   sortPostSnippets(postSnippets, pivot) {
@@ -170,7 +173,7 @@ class PostHelper {
     for (this.i = 0; this.i < posts.length; this.i++) {
 
       /**
-       * Instantiates Post Snippet object.
+       * Creates Post Snippet object.
        */
       let currentPost = new PostSnippet(
         posts[this.i].id,
@@ -279,16 +282,17 @@ class PostHelper {
           post.data.title,
           post.data.category,
           post.data.content
-          );
+        );
 
         // Fires GTM tag
         let googleTagManagerHelper = new GoogleTagManagerHelper();
-        let params = {
+        googleTagManagerHelper.event = 'post';
+        googleTagManagerHelper.params = {
           postId : this.currentPost.id,
           postTitle : this.currentPost.title,
-          postLanguage : lang,
+          postLanguage : lang
         };
-        googleTagManagerHelper.triggerEvent('post', params);
+        googleTagManagerHelper.fireTag();
         
         // Prints post on page
         this.printPost(this.currentPost, lang);

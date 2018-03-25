@@ -10,6 +10,17 @@
       text-decoration:none;
       color:#333333;
     }
+    
+    h1 {
+      font-size:48px;
+      line-height:1.5;
+      margin-bottom:40px;
+    }
+    
+    p, blockquote {
+      line-height:2;
+      margin-bottom:40px;
+    }
 
     .header {
       position: fixed;
@@ -113,8 +124,7 @@
           .about-me-content {
             width:calc(100%-40px);
             padding:20px;
-            padding-top:0;
-            padding-bottom:0;
+            line-height:1.5;
             font-size:14px;
             overflow:auto;
             color:#444444;
@@ -199,6 +209,7 @@
       width:800px;
       padding:20px;
       overflow:auto;
+      font-family:'Roboto Slab';
     }
 
     .content-title {
@@ -210,10 +221,18 @@
     }
 
     .content {
-      padding-top:40px;
+      padding-top:20px;
       font-size:16px;
       overflow:auto;
-      color:#666666;
+      color:#333333;
+    }
+    
+    .img-caption {
+      font-size:12px;
+      font-style:italic;
+      color:#999999;
+      text-align:center;
+      margin:10px;
     }
 
     .stack {

@@ -31,6 +31,16 @@ const Datastore = require('@google-cloud/datastore');
 const datastore = Datastore();
 // [END setup]
 
+function idValidator(id) {
+  if (id.length === 0 || id.length > 20) {
+  	return false;
+  } else if (isNaN(Number(id))) {
+  	return false;
+  }
+  
+  return true;
+}
+
 /*
  * Returns array of posts.
  * @return {Array<Post>} All posts.
@@ -42,7 +52,7 @@ function getPosts() {
   return datastore.runQuery(query)
     .then((results) => {
       const entities = results[0];
-      return entities.map((entity) => {
+      let posts = entities.map((entity) => {
         return new PostSnippet(
           entity[datastore.KEY].id,
           entity.date,
@@ -51,6 +61,17 @@ function getPosts() {
       	  entity.category
         );
       });
+      
+      return {
+      	'status' : 200,
+      	'message' : posts
+      };
+    })
+    .catch((e) => {
+      return {
+        'status' : e.code,
+        'message' : e.metadata.details
+      };
     });
 }
 
@@ -60,22 +81,45 @@ function getPosts() {
  * @return {Post} Selected post.
  */
 function getPostById(id) {
+	
   let query = datastore.createQuery('Post')
     .filter('__key__', '=', datastore.key(['Post', id]));
     
   return datastore.runQuery(query)
     .then((results) => {
       let entity = results[0][0];
-      return new Post(
+      
+      if (results[0].length === 0) {
+      	return {
+      	  'status' : 404,
+      	  'message' : 'Post not found.'
+      	};
+      }
+      
+      let post = new Post(
         entity[datastore.KEY].id,
       	entity.date,
       	entity.image,
       	entity.title,
       	entity.category,
-      	entity.en,
-      	entity.pl,
-      	entity.pt
+        entity.en,
+       	entity.pl,
+        entity.pt
       );
+      
+      return {
+        'status' : 200,
+        'message' : post
+      };
+      
+    })
+
+    .catch((e) => {
+      console.log(e);
+      return {
+        'status' : e.code,
+        'message' : e.details
+      };
     });
 }
 
@@ -91,7 +135,7 @@ function getLatestPost() {
   return datastore.runQuery(query)
     .then((results) => {
       let entity = results[0][0];
-      return new Post(
+      let post = new Post(
         entity[datastore.KEY].id,
       	entity.date,
       	entity.image,
@@ -101,6 +145,18 @@ function getLatestPost() {
       	entity.pl,
       	entity.pt
       );
+      
+      return {
+        'status' : 200,
+        'message' : post
+      };
+      
+    })
+    .catch((e) => {
+      return {
+        'status' : e.code,
+        'message' : e.metadata.details
+      };
     });
 }
 
@@ -108,8 +164,8 @@ app.get('/', (req, res) => {
   Promise.all([getLatestPost(), getPosts()])
     .then((resp) => {
       res.render('index', {
-      	'latestPost': resp[0],
-      	'posts': resp[1]
+      	'latestPost': resp[0].message,
+      	'posts': resp[1].message
       });
     })
     .catch((e) => {
@@ -120,34 +176,45 @@ app.get('/', (req, res) => {
 app.get('/getpost', (req, res) => {
   /* If ID available, looks for post with that ID */
   if (typeof req.query.id !== "undefined") {
-    getPostById(parseInt(req.query.id, 10))
-      .then((post) => {
-        res
-          .status(200)
-          .set('Content-Type', 'text/plain')
-          .json(post)
-          .end();
-    });
+    if (!idValidator(req.query.id)) {
+  	  res
+  	    .status(400)
+  	    .set('Content-Type', 'text/plain')
+  	    .json({
+  	    	'status' : 400,
+  	    	'message' : 'ID invalid.'
+  	    })
+  	    .end();
+  	} else {	
+      getPostById(parseInt(req.query.id, 10))
+        .then((postData) => {
+          res
+            .status(postData.status)
+            .set('Content-Type', 'text/plain')
+            .json(postData)
+            .end();
+        });
+    }
   /* If ID unavailable, gets the latest post */
   } else {
     getLatestPost()
-      .then((post) => {
+      .then((postData) => {
         res
-          .status(200)
+          .status(postData.status)
           .set('Content-Type', 'text/plain')
-          .json(post)
+          .json(postData)
           .end();
-    });
+      });
   }
 });
 
 app.get('/getposts', (req, res) => {	
   getPosts()
-    .then((posts) => {
+    .then((postData) => {
       res
-        .status(200)
+        .status(postData.status)
         .set('Content-Type', 'text/plain')
-        .json(posts)
+        .json(postData)
         .end();
     });
 });
