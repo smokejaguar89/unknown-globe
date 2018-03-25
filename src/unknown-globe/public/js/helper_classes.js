@@ -7,7 +7,7 @@ class GoogleTagManagerHelper {
   }
   
   fireTag() {
-  	dataLayer.push(this.params);
+    dataLayer.push(this.params);
     dataLayer.push({'event' : this.event });
   }
 }

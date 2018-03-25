@@ -31,13 +31,13 @@ const Datastore = require('@google-cloud/datastore');
 const datastore = Datastore();
 // [END setup]
 
-function idValidator(id) {
+function isValidId(id) {
   if (id.length === 0 || id.length > 20) {
-  	return false;
+    return false;
   } else if (isNaN(Number(id))) {
-  	return false;
+    return false;
   }
-  
+
   return true;
 }
 
@@ -176,7 +176,7 @@ app.get('/', (req, res) => {
 app.get('/getpost', (req, res) => {
   /* If ID available, looks for post with that ID */
   if (typeof req.query.id !== "undefined") {
-    if (!idValidator(req.query.id)) {
+    if (!isValidId(req.query.id)) {
   	  res
   	    .status(400)
   	    .set('Content-Type', 'text/plain')
