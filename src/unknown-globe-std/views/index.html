@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Unknown Globe</title>
+  <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
+  
+  <!-- Google Tag Manager Data Layer -->
+  <script>
+    dataLayer = [{
+      'postId' : '{{ post.id }}',
+      'postTitle' : '{{ post.data.title }}',
+      'postLanguage' : 'en'
+    }]
+  </script>
+  
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-PHC3SSJ');</script>
+  <!-- End Google Tag Manager -->
+  
+  <!-- Data Models -->
+  <script type="text/javascript" src="/models/models.js"></script>
+  
+  <!-- Frontend Helper Functions -->
+  <script type="text/javascript" src="/js/helper_classes.js"></script>
+
+  <!-- Dependencies -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Dhurjati|Roboto+Slab|Material+Icons" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/css/spinner.css">
+
+</head>
+
+<body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PHC3SSJ"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <div class="header depth-1">
+    <div class="header-container">
+    
+      <div class="header-title">
+        un<span style="color:#FF5252">known</span>globe
+      </div>
+
+      <div class="header-loading-icon depth-1" id="header-icon">
+        <img src="assets/globe.svg" class="globe-icon" id="globe-icon" alt="globe"/>
+        <div class="spinner" id="spinner">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+      </div>
+         
+    </div>
+  </div>
+  
+  <div class="cover-image depth-1">
+    <a target="_blank" href="https://www.google.co.uk/maps/place/Litang,+Garze,+Sichuan,+China/@29.8222003,99.677608,9z/data=!3m1!4b1!4m5!3m4!1s0x371dc27ee9077b55:0xbc8a1d3ee2fa973d!8m2!3d29.996049!4d100.269817?hl=en">
+      <div class="cover-image-caption depth-1">
+        <div class="cover-image-caption-img">
+          <div class="cover-image-caption-img-ball depth-1">
+            <img src="/assets/pointer.png" width=100% height=100% />
+          </div>
+        </div>
+        <div class="cover-image-caption-text">
+          Litang, People's Republic of China
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="container">
+  
+    <div class="core-content">
+
+      <div class="content-container">
+        <div class="content-title" id="post-title">
+          {{ post.data.title }}
+        </div>
+        <div class="content" id="post-content">
+          {{ post.data.content.en | safe }}
+        </div>
+      </div>
+
+      <div class="stack" id="stack">
+    
+        {% for post in posts %}
+          {% if loop.index0 == 0 %}
+      
+          <div class="card alpha depth-2" id="alpha" style="z-index:{{ loop.length }}" postId="{{ post.id }}">
+            <div class="card-title-container">
+              <div class="card-title">
+                {{ post.data.title }}
+                <div class="card-subtitle">
+                  {{ post.data.category }}
+                </div>
+              </div>
+              <div class="date">
+                {{ post.data.date_string }}
+              </div>
+            </div>
+            <div class="card-img" style="background-image: url('assets/{{ post.data.image }}')">
+              <div class="card-img-overlay">
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="lang" lang="en">ENGLISH</div>
+              <div class="lang" lang="pl">POLSKI</div>
+              <div class="lang" lang="pt">PORTUGUÊS</div>
+            </div>
+          </div>
+        
+          {% else %}
+
+          <div class="card beta depth-1" style="z-index:{{ loop.revindex0 }}" postId="{{ post.id }}">
+            <div class="card-title-container">
+              <div class="img-ball depth-1" style="background-image:url('assets/{{ post.data.image }}')"></div>
+              <div class="card-title">
+                {{ post.data.title }}
+                <div class="card-subtitle">
+                  {{ post.data.category }}
+                </div>
+              </div>
+              <div class="date">
+                {{ post.data.date_string }}
+              </div>
+            </div>
+          </div>
+        
+        {% endif %}
+      {% endfor %}
+
+      </div>
+    </div>
+  
+    <div class="footer">
+      <div class="footer-section-narrow">
+        <div class="about-me-container depth-2">
+          <div class="about-me-title-container">
+            <div class="about-me-img-container">
+              <div class="about-me-img depth-1"></div>
+            </div>
+            <div class="about-me-title">
+              Nicholas Hall<br>
+              <span style="font-size:14px;color:#999999;">
+                theologue@gmail.com
+              </span>
+            </div>
+          </div>
+          
+          <div class="about-me-content">
+            Hey, I'm Nick. Born and bred Londoner. Currently living and working in Zürich, Switzerland as a Product Technology Manager at Google.<br><br>
+            This is my little place on the web to show off some travel pictures, write code without tests, rip off other people's ideas and murder the Polish language.
+          </div>
+          
+          <div class="about-me-footer">
+              <div class="about-me-footer-section">
+                <a target="_blank" href="https://www.facebook.com/nicholas.j.hall">
+                  <img src="/assets/fb.svg" width=22px height=22px />
+                </a>
+              </div>
+              <div class="about-me-footer-section">
+                <a target="_blank" href="https://www.linkedin.com/in/nicholasjh/">
+                  <img src="/assets/li.svg" width=22px height=22px />
+                </a>
+              </div>
+              <div class="about-me-footer-section">
+                <a target="_blank" href="https://www.instagram.com/nicholasjameshall/">
+                  <img src="/assets/ig.svg" width=22px height=22px />
+                </a>
+              </div>
+              <div class="about-me-footer-section">
+                <a target="_blank" href="https://github.com/smokejaguar89">
+                  <img src="/assets/gh.png" width=22px height=22px />
+                </a>
+              </div>
+          </div>
+        </div>
+      </div> 
+      <div class="footer-section-wide">
+      </div>
+    </div>
+
+  </div>
+  
+  <script>
+    (function() {
+      let postHelper = new PostHelper();
+      postHelper.addEventListeners();
+    })();
+  </script>
+
+</body>
+
+</html>
