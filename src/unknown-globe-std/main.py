@@ -33,7 +33,7 @@ class DatastoreHelper(object):
         return [self._build_post_obj(result) for result in results]
     
     def _build_post_obj(self, post):
-        post_helper = PostHelper(post.key.urlsafe(), post.to_dict())
+        post_helper = PostHelper(post)
         return post_helper.get_post()
 
     def get_post(self, id=None):
@@ -54,14 +54,14 @@ class DatastoreHelper(object):
                 key = None
             if key:
                 post = key.get()
-                post_helper = PostHelper(post.key.urlsafe(), post.to_dict())
+                post_helper = PostHelper(post)
                 return post_helper.get_post()
             return None
     
         post = Post.query().order(-Post.date).get()
     
         if post:
-            post_helper = PostHelper(post.key.urlsafe(), post.to_dict())
+            post_helper = PostHelper(post)
             return post_helper.get_post()
       
         return None
