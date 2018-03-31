@@ -16,7 +16,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     
 class DatastoreHelper(object):
     def get_posts(self):
-        query = Post.query()
+        query = Post.query().order(-Post.date)
         results = query.fetch()
         return [self._build_post_obj(result) for result in results]
     
