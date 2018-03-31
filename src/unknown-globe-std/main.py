@@ -18,6 +18,7 @@ import os
 import json
 import time
 import datetime
+import re
 from google.appengine.ext import ndb
 from models import Post, PostHelper
 
@@ -28,7 +29,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     
 class DatastoreHelper(object):
     def get_posts(self):
-        query = Post.query().order(-Post.date)
+        query = Post.query()
         results = query.fetch()
         return [self._build_post_obj(result) for result in results]
     
@@ -83,17 +84,26 @@ class MainPage(webapp2.RequestHandler):
         
 class GetPost(webapp2.RequestHandler):
     def get(self, id):
-        datastore_helper = DatastoreHelper()
-        post = datastore_helper.get_post(id)
+        if self._is_valid_id(id):
+            datastore_helper = DatastoreHelper()
+            post = datastore_helper.get_post(id)
     
-        self.response.headers['Content-Type'] = 'application/json'
+            self.response.headers['Content-Type'] = 'application/json'
    
-        if post is not None:
-          self.response.write(json.dumps({'message': post}))
+            if post is not None:
+              self.response.write(json.dumps({'message': post}))
+            else:
+              self.response.status = 404
+              self.response.write(json.dumps({'message': "Post not found."}))
         else:
-          self.response.status = 404
-          self.response.write(json.dumps({'message': "Not found"}))
-  
+            self.response.status = 400
+            self.response.write(json.dumps({'message': 'Invalid ID.'}))
+          
+    def _is_valid_id(self, id):
+        if len(id) == 0 or (len(id) < 50 and bool(re.match(r'^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$', id))):
+            return True
+        return False
+
 class GetPosts(webapp2.RequestHandler):
     def get(self):
         datastore_helper = DatastoreHelper()
