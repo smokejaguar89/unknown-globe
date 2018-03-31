@@ -23,9 +23,10 @@ class PostHelper(object):
     def __init__(self, post):
         self.id = post.key.urlsafe()
         post_dict = post.to_dict()
+        post_date = post_dict.get('date', None)
         self.data = {
-            'date': int(time.mktime(post_dict['date'].timetuple())) if post_dict['date'] else None,
-            'date_string': str(post_dict.get('date', None)),
+            'date': int(time.mktime(post_date.timetuple())) if post_date else None,
+            'date_string': str(post_date) if post_date else None,
             'title': post_dict.get('title', None),
             'image': post_dict.get('image', None),
             'category': self._category_enum_converter(post_dict.get('category', 0)),
