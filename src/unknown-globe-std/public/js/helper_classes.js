@@ -1,14 +1,31 @@
 /*eslint-disable no-else-return */
-class GoogleTagManagerHelper {
-
-  constructor() {
-    this.event;
-    this.params;
+class ErrorHandler {
+	
+  constructor(id) {
+    this.messages = {
+      1: 'Posts could not be loaded. Please try again later.',
+      2: '1234'
+    };
+    this.message = id in this.messages ? this.messages[id] : "Unknown error";
   }
   
-  fireTag() {
-    dataLayer.push(this.params);
-    dataLayer.push({'event' : this.event });
+  displayError() {
+  	console.log(this.message);
+  }
+}
+
+class GoogleTagManagerHelper {
+
+  constructor() {}
+  
+  /**
+   * Fires tag by pushing event into global data layer.
+   * @param {event} event Event name to trigger tag.
+   * @param {object} params Parameters to include in network request.
+   */
+  fireTag(event, params={}) {
+    dataLayer.push(params);
+    dataLayer.push({'event' : event });
   }
 }
 
@@ -32,18 +49,33 @@ class HttpHelper {
       return "";
     }
   }
+  
+  /**
+   * Builds URI to make request.
+   * @param {string} base Base URI (domain).
+   * @param {string} action URI path.
+   * @param {object} params Query string parameters.
+   * @return {string} Finalised URL.
+   */
+  buildUri(base, action, params={}) {
+  	let path = action + '/';
+
+  	if('id' in params) {
+  	  path += params['id'];
+  	  delete params['id'];
+  	}
+
+    return base + '/' + path + this.buildQueryString(params);
+  }
 
   /**
    * Makes GET request.
-   * @param {string} url URL to make GET request to.
-   * @param {object} params Data to construct query string.
+   * @param {string} uri URL to make GET request to (including query string).
    * @return {object} JSON response from server.
    */
-  get(url, params={}) {
-    return new Promise((resolve, reject) => {
-      let completedUri = url + this.buildQueryString(params);
-    	
-      this.xhr.open("GET", completedUri, true);
+  get(uri) {
+    return new Promise((resolve, reject) => {    	
+      this.xhr.open("GET", uri, true);
       this.xhr.onreadystatechange = function() {
         if (this.readyState === 4 && this.status >= 200) {
           resolve(JSON.parse(this.response));
@@ -63,8 +95,9 @@ class HttpHelper {
 class PostHelper {
 	
   constructor() {
+  	this.baseUri = 'https://unknown-globe.appspot.com';
     this.currentPost;
-    this.snippets;
+    this.postSnippets;
   }
 
   /**
@@ -73,16 +106,16 @@ class PostHelper {
    * @return {Array<Post>} Posts returned from API.
    */
   getPosts(params={}) {
-    if (typeof this.snippets !== 'undefined') {
+    if (typeof this.postSnippets !== 'undefined') {
       return new Promise((resolve) => {
-        resolve(this.snippets);
+        resolve(this.postSnippets);
       });
     } else {
-      let BASE_URI = 'https://unknown-globe.appspot.com/getposts/';
+      let httpHelper = new HttpHelper();
+      let uri = httpHelper.buildUri(this.baseUri, 'getposts', params);
 
       return new Promise((resolve, reject) => {
-        let httpHelper = new HttpHelper();
-        httpHelper.get(BASE_URI, params)
+        httpHelper.get(uri)
           .then((resp) => {
             resolve(resp.message);
           })
@@ -99,12 +132,11 @@ class PostHelper {
    * @return {Post} Post returned from API.
    */
   getPostById(id) {
-    let BASE_URI = 'https://unknown-globe.appspot.com/getpost/';
-    let params = { 'id' : id };
-  	
+    let httpHelper = new HttpHelper();
+    let uri = httpHelper.buildUri(this.baseUri, 'getpost', { 'id' : id });
+
     return new Promise((resolve, reject) => {
-      let httpHelper = new HttpHelper();
-      httpHelper.get(BASE_URI + id)
+      httpHelper.get(uri)
         .then((resp) => {
           resolve(resp.message);
         })
@@ -112,6 +144,7 @@ class PostHelper {
           reject(e);
         });
     });
+    
   }
 
   /**
@@ -164,28 +197,28 @@ class PostHelper {
   
   /**
    * Takes posts as input and builds cards from their content.
-   * @param {Array<Post>} posts Posts.
+   * @param {Array<PostSnippet>} postSnippets Post Snippets from which to build cards.
    * @return {string} Cards as string of HTML.
    */
-  buildCards(posts) {
+  buildCardsFromPostSnippets(postSnippets) {
     let cardsHtml = [];
 
-    for (this.i = 0; this.i < posts.length; this.i++) {
+    for (this.i = 0; this.i < postSnippets.length; this.i++) {
 
       /**
        * Creates Post Snippet object.
        */
       let currentPost = new PostSnippet(
-        posts[this.i].id,
-        posts[this.i].data.date,
-        posts[this.i].data.date_string,
-        posts[this.i].data.image,
-        posts[this.i].data.title,
-        posts[this.i].data.category
+        postSnippets[this.i].id,
+        postSnippets[this.i].data.date,
+        postSnippets[this.i].data.date_string,
+        postSnippets[this.i].data.image,
+        postSnippets[this.i].data.title,
+        postSnippets[this.i].data.category
       );
 
       if (this.i === 0) {
-        cardsHtml.push('<div class="card alpha depth-2" id="alpha" style="z-index:' + posts.length.toString() + '" postId=' + currentPost.id + '>');
+        cardsHtml.push('<div class="card alpha depth-2" id="alpha" style="z-index:' + postSnippets.length.toString() + '" postId=' + currentPost.id + '>');
         cardsHtml.push('<div class="card-title-container"><div class="card-title">' + currentPost.title);
         cardsHtml.push('<div class="card-subtitle">' + currentPost.category + '</div></div>');
         cardsHtml.push('<div class="date">' + currentPost.dateString + '</div></div>');
@@ -196,7 +229,7 @@ class PostHelper {
         cardsHtml.push('<div class="lang" lang="pt">PORTUGUÊS</div>');
         cardsHtml.push('</div></div>');
       } else {
-        cardsHtml.push('<div class="card beta depth-1" style="z-index:' + (posts.length - this.i).toString() + '" postId=' + currentPost.id +'>');
+        cardsHtml.push('<div class="card beta depth-1" style="z-index:' + (postSnippets.length - this.i).toString() + '" postId=' + currentPost.id +'>');
         cardsHtml.push('<div class="card-title-container">');
         cardsHtml.push('<div class="img-ball depth-1" style="background-image:url(\'/assets/' + currentPost.image +'\')"></div>');
         cardsHtml.push('<div class="card-title">' + currentPost.title);
@@ -262,50 +295,51 @@ class PostHelper {
   /**
    * Loads selected post and prints on to page. Sorts post snippets.
    * @param {number} id ID of post to retrieve.
-   * @param {string} lang Language of content to print.
+   * @param {string} selectedLanguage Language of content to print.
    * @param {number} pivot Position of the chosen post in the array of posts.
    */
-  loadPost(id, lang, pivot) {
+  loadPost(id, selectedLanguage, pivot) {
     this.toggleLoader();
     
     Promise.all([this.getPostById(id), this.getPosts()])
       .then((resp) => {
-        let post = resp[0];
-        let posts = resp[1];
-        
         // Assigns retrieved post to member variable currentPost
       	this.currentPost = new Post(
-          post.id,
-          post.data.date,
-          post.data.date_string,
-          post.data.image,
-          post.data.title,
-          post.data.category,
-          post.data.content
+          resp[0].id,
+          resp[0].data.date,
+          resp[0].data.date_string,
+          resp[0].data.image,
+          resp[0].data.title,
+          resp[0].data.category,
+          resp[0].data.content
         );
+        
+        this.postSnippets = resp[1];
 
-        // Fires GTM tag
+        // Fires Google Analytics tag via GTM
         let googleTagManagerHelper = new GoogleTagManagerHelper();
-        googleTagManagerHelper.event = 'post';
-        googleTagManagerHelper.params = {
+        let event = 'post';
+        let params = {
           postId : this.currentPost.id,
           postTitle : this.currentPost.title,
-          postLanguage : lang
+          postLanguage : selectedLanguage
         };
-        googleTagManagerHelper.fireTag();
+        googleTagManagerHelper.fireTag(event, params);
         
         // Prints post on page
-        this.printPost(this.currentPost, lang);
+        this.printPost(this.currentPost, selectedLanguage);
 
         // Post Snippets
-        this.snippets = posts;
-      	let cards = this.buildCards(this.sortPostSnippets(this.snippets, pivot));
+        let sortedPostSnippets = this.sortPostSnippets(this.postSnippets, pivot);
+      	let cards = this.buildCardsFromPostSnippets(sortedPostSnippets);
       	this.layCards(cards);
       	this.addEventListeners(cards);
       	this.toggleLoader();
       })
       .catch((e) => {
       	this.toggleLoader();
+      	let errorHandler = new ErrorHandler(1);
+      	errorHandler.displayError();
       	console.log(e);
       });
   } 

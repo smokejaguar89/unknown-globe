@@ -46,7 +46,7 @@ class PostHelper(object):
             2: 'Travel'
         }
     
-        return categories.get(category_id, "Unknown")
+        return categories.get(category_id, 'Unknown')
     
     def get_post(self):
         return self.post
