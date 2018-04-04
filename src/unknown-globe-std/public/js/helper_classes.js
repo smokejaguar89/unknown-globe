@@ -1,19 +1,17 @@
-/*eslint-disable no-else-return */
+/**
+ * Error handler class to show externally friendly error messages.
+ */
 class ErrorHandler {
-	
+  /**
+   * @param {number} id ID of the error.
+   */
   constructor(id) {
     let messages = {
       1: 'Posts could not be loaded. Please try again later.',
       2: '1234'
     };
-
-    if(!this.id || !(this.id in messages)) {
-      this.id = 0;
-      this.message = "Unknown error";
-    } else {
-      this.id = id;
-      this.message = messages[id];
-    }
+    
+    this.message = !this.id || !(this.id in messages) ? "Unknown error" : messages[id];
   }
   
   /**
@@ -30,6 +28,9 @@ class ErrorHandler {
   }
 }
 
+/**
+ * Class to help with tag firing events.
+ */
 class GoogleTagManagerHelper {
 
   constructor() {}
@@ -45,6 +46,9 @@ class GoogleTagManagerHelper {
   }
 }
 
+/**
+ * Class to help with HTTP requests.
+ */
 class HttpHelper {
 
   constructor() {
@@ -61,9 +65,9 @@ class HttpHelper {
       return '?' + Object.keys(data).map(function(key) {
         return [key, data[key]].map(encodeURIComponent).join("=");
       }).join("&");
-    } else {
-      return "";
     }
+    
+    return "";
   }
   
   /**
@@ -108,6 +112,9 @@ class HttpHelper {
   }
 }
 
+/**
+ * Class to help with post-related operations.
+ */
 class PostHelper {
 	
   constructor() {
@@ -126,20 +133,20 @@ class PostHelper {
       return new Promise((resolve) => {
         resolve(this.postSnippets);
       });
-    } else {
-      let httpHelper = new HttpHelper();
-      let uri = httpHelper.buildUri(this.baseUri, 'getposts', params);
-
-      return new Promise((resolve, reject) => {
-        httpHelper.get(uri)
-          .then((resp) => {
-            resolve(resp.message);
-          })
-          .catch((e) => {
-            reject(e);
-          });
-      });
     }
+    
+    let httpHelper = new HttpHelper();
+    let uri = httpHelper.buildUri(this.baseUri, 'getposts', params);
+
+    return new Promise((resolve, reject) => {
+      httpHelper.get(uri)
+        .then((resp) => {
+          resolve(resp.message);
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
   }
 
   /**
@@ -198,7 +205,7 @@ class PostHelper {
    * Moves item at position <pivot> to beginning of array <postSnippets> and orders
    *  remaining posts by date
    * @param {Array<PostSnippet>} postSnippets Post snippets to be shuffled.
-   * @param {number} pivot Position of the post to move to front of postSnippets.
+   * @param {number} pivot Position of the post to move to front of <postSnippets>.
    * @return {Array<PostSnippet>} Shuffled post snippets.
    */
   sortPostSnippets(postSnippets, pivot) {
@@ -220,7 +227,6 @@ class PostHelper {
     let cardsHtml = [];
 
     for (this.i = 0; this.i < postSnippets.length; this.i++) {
-
       /**
        * Creates Post Snippet object.
        */
@@ -298,14 +304,14 @@ class PostHelper {
   /**
    * Prints post on page.
    * @param {Post} post Post to print on page.
-   * @param {string} lang Language of content to print on page.
+   * @param {string} selectedLanguage Language of content to print on page.
    */
-  printPost(post, lang) {
+  printPost(post, selectedLanguage) {
     let titleDiv = document.getElementById('post-title');
     let contentDiv = document.getElementById('post-content');
 
     titleDiv.innerHTML = post.getTitle();
-    contentDiv.innerHTML = post.getContentByLanguage(lang);
+    contentDiv.innerHTML = post.getContentByLanguage(selectedLanguage);
   }
 
   /**
@@ -345,7 +351,7 @@ class PostHelper {
         // Prints post on page
         this.printPost(this.currentPost, selectedLanguage);
 
-        // Post Snippets
+        // Assembles and lays post snippet cards
         let sortedPostSnippets = this.sortPostSnippets(this.postSnippets, pivot);
       	let cards = this.buildCardsFromPostSnippets(sortedPostSnippets);
       	this.layCards(cards);

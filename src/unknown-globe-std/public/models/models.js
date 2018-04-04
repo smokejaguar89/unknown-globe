@@ -14,6 +14,7 @@ class PostSnippet {
   getTitle() {
     return this.title;
   }
+  
 }
 
 /*
