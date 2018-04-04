@@ -6,7 +6,7 @@ class ErrorHandler {
       1: 'Posts could not be loaded. Please try again later.',
       2: '1234'
     };
-        
+
     if(!this.id || !(this.id in messages)) {
       this.id = 0;
       this.message = "Unknown error";
