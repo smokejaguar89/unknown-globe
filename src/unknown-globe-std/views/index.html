@@ -8,13 +8,15 @@
   <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
   
   <!-- Google Tag Manager Data Layer -->
-  <script>
-    dataLayer = [{
-      'postId' : '{{ post.id }}',
-      'postTitle' : '{{ post.data.title }}',
-      'postLanguage' : 'en'
-    }]
+  {% if post %}
+    <script>
+      dataLayer.push({
+        'postId' : '{{ post.id }}',
+        'postTitle' : '{{ post.data.title }}',
+        'postLanguage' : 'en'
+      });
   </script>
+  {% endif %}
   
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -67,6 +69,7 @@
   </div>
   
   <div class="cover-image depth-1">
+    <div class="error-container depth-1" id="error"></div>
     <a target="_blank" href="https://www.google.co.uk/maps/place/Litang,+Garze,+Sichuan,+China/@29.8222003,99.677608,9z/data=!3m1!4b1!4m5!3m4!1s0x371dc27ee9077b55:0xbc8a1d3ee2fa973d!8m2!3d29.996049!4d100.269817?hl=en">
       <div class="cover-image-caption depth-1">
         <div class="cover-image-caption-img">
@@ -84,6 +87,8 @@
   <div class="container">
   
     <div class="core-content">
+    
+      {% if post %}
 
       <div class="content-container">
         <div class="content-title" id="post-title">
@@ -93,6 +98,8 @@
           {{ post.data.content.en | safe }}
         </div>
       </div>
+      
+      {% endif %}
 
       <div class="stack" id="stack">
     
@@ -199,6 +206,10 @@
     (function() {
       let postHelper = new PostHelper();
       postHelper.addEventListeners();
+      
+      let errorHandler = new ErrorHandler(1);
+      errorHandler.displayError();
+      
     })();
   </script>
 

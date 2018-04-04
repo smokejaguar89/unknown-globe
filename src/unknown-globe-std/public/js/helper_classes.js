@@ -6,12 +6,27 @@ class ErrorHandler {
       1: 'Posts could not be loaded. Please try again later.',
       2: '1234'
     };
-    this.id = id;
-    this.message = id in messages ? messages[id] : "Unknown error";
+        
+    if(!this.id || !(this.id in messages)) {
+      this.id = 0;
+      this.message = "Unknown error";
+    } else {
+      this.id = id;
+      this.message = messages[id];
+    }
   }
   
+  /**
+   * Displays external error message for three seconds.
+   */
   displayError() {
-    console.log(this.message);
+    let errorContainer = document.getElementById('error');
+    errorContainer.innerHTML = this.message;
+    errorContainer.style.display = 'block';
+    
+    window.setTimeout(function() {
+      errorContainer.style.display = 'none';
+    }, 3000);
   }
 }
 
@@ -223,7 +238,7 @@ class PostHelper {
         cardsHtml.push('<div class="card-title-container"><div class="card-title">' + currentPost.title);
         cardsHtml.push('<div class="card-subtitle">' + currentPost.category + '</div></div>');
         cardsHtml.push('<div class="date">' + currentPost.dateString + '</div></div>');
-        cardsHtml.push('<div class="card-img" style="background-image: url(\'/assets/' + currentPost.image + '\')"><div class="card-img-overlay"></div></div>');
+        cardsHtml.push('<div class="card-img" style="background-image: url(\'/assets/' + currentPost.image + '\')"></div>');
         cardsHtml.push('<div class="card-footer">');
         cardsHtml.push('<div class="lang" lang="en">ENGLISH</div>');
         cardsHtml.push('<div class="lang" lang="pl">POLSKI</div>');

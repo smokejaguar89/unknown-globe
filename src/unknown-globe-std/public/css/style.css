@@ -353,3 +353,17 @@
     .depth-2 {
       box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
     }
+    
+.error-container {
+  margin:auto;
+  margin-top:80px;
+  padding:20px;
+  width:400px;
+  overflow:auto;
+  line-height:20px;
+  text-align:center;
+  background-color:#FF5252;
+  color: white;
+  font-size:12px;
+  display:none;
+}
