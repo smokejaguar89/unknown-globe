@@ -2,15 +2,16 @@
 class ErrorHandler {
 	
   constructor(id) {
-    this.messages = {
+    let messages = {
       1: 'Posts could not be loaded. Please try again later.',
       2: '1234'
     };
-    this.message = id in this.messages ? this.messages[id] : "Unknown error";
+    this.id = id;
+    this.message = id in messages ? messages[id] : "Unknown error";
   }
   
   displayError() {
-  	console.log(this.message);
+    console.log(this.message);
   }
 }
 
