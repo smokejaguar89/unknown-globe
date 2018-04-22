@@ -1,17 +1,16 @@
+/*eslint-env browser */
+
 /**
  * Error handler class to show externally friendly error messages.
  */
-class ErrorHandler {
+class ErrorHandler extends Error {
   /**
    * @param {number} id ID of the error.
    */
-  constructor(id) {
-    let messages = {
-      1: 'Posts could not be loaded. Please try again later.',
-      2: '1234'
-    };
-    
-    this.message = !this.id || !(this.id in messages) ? "Unknown error" : messages[id];
+  constructor(status, message) {
+    super();
+    this.name = status;
+    this.message = message;
   }
   
   /**
@@ -28,11 +27,43 @@ class ErrorHandler {
   }
 }
 
+class UiHelper {
+  constructor() {}
+  
+  /** 
+   * Toggles loading animation.
+   */
+  static toggleLoader() {
+    let globeIcon = document.getElementById('globe-icon');
+    let spinner = document.getElementById('spinner');
+    
+    if (globeIcon.style.display === 'none') {
+      globeIcon.style.display = 'block';
+      spinner.style.display = 'none';
+    } else {
+      globeIcon.style.display = 'none';
+      spinner.style.display = 'block';
+    }
+  }
+  
+  /**
+   * Toggles post title in the nav-bar.
+   */
+  static toggleHeaderPostTitle() {
+  	let postTitle = document.getElementById('header-post-title');
+  	
+  	if(window.scrollY > 440) {
+  	  postTitle.style.display = "inline";
+  	} else {
+  	  postTitle.style.display = "none";
+  	}
+  }
+}
+
 /**
  * Class to help with tag firing events.
  */
 class GoogleTagManagerHelper {
-
   constructor() {}
   
   /**
@@ -40,7 +71,7 @@ class GoogleTagManagerHelper {
    * @param {event} event Event name to trigger tag.
    * @param {object} params Parameters to include in network request.
    */
-  fireTag(event, params={}) {
+  static fireTag(event, params={}) {
     dataLayer.push(params);
     dataLayer.push({'event' : event });
   }
@@ -50,7 +81,6 @@ class GoogleTagManagerHelper {
  * Class to help with HTTP requests.
  */
 class HttpHelper {
-
   constructor() {
     this.xhr = new XMLHttpRequest();
   }
@@ -102,10 +132,7 @@ class HttpHelper {
         }
       };
       this.xhr.onerror = () => {
-        reject({
-          status: this.status,
-          statusText: this.statusText
-        });
+        reject(new ErrorHandler(this.status, this.statusText));
       };
       this.xhr.send();
     });
@@ -116,10 +143,8 @@ class HttpHelper {
  * Class to help with post-related operations.
  */
 class PostHelper {
-	
   constructor() {
   	this.baseUri = 'https://unknown-globe.appspot.com';
-    this.currentPost;
     this.postSnippets;
   }
 
@@ -140,8 +165,17 @@ class PostHelper {
 
     return new Promise((resolve, reject) => {
       httpHelper.get(uri)
-        .then((resp) => {
-          resolve(resp.message);
+        .then((resp) => {	
+          resolve(resp.message.map((item) => {
+            return new PostSnippet(
+              item.id,
+              item.data.date,
+              item.data.date_string,
+              item.data.image,
+              item.data.title,
+              item.data.category
+            );
+          }));
         })
         .catch((e) => {
           reject(e);
@@ -161,7 +195,15 @@ class PostHelper {
     return new Promise((resolve, reject) => {
       httpHelper.get(uri)
         .then((resp) => {
-          resolve(resp.message);
+            resolve(new Post(
+              resp.message.id,
+              resp.message.data.date,
+              resp.message.data.date_string,
+              resp.message.data.image,
+              resp.message.data.title,
+              resp.message.data.category,
+              resp.message.data.content
+            ));
         })
         .catch((e) => {
           reject(e);
@@ -185,22 +227,6 @@ class PostHelper {
     return formattedTime;
   }
 
-  /** 
-   * Toggles loading animation.
-   */
-  toggleLoader() {
-    let globeIcon = document.getElementById('globe-icon');
-    let spinner = document.getElementById('spinner');
-    
-    if (globeIcon.style.display === 'none') {
-      globeIcon.style.display = 'block';
-      spinner.style.display = 'none';
-    } else {
-      globeIcon.style.display = 'none';
-      spinner.style.display = 'block';
-    }
-  }
-
   /**
    * Moves item at position <pivot> to beginning of array <postSnippets> and orders
    *  remaining posts by date
@@ -212,7 +238,7 @@ class PostHelper {
     let alpha = postSnippets[pivot];
     postSnippets.splice(pivot, 1);
     postSnippets.sort((a, b) => {
-      return b.data.date - a.data.date;
+      return b.date - a.date;
     });
     postSnippets.splice(0, 0, alpha);
     return postSnippets;
@@ -227,17 +253,7 @@ class PostHelper {
     let cardsHtml = [];
 
     for (this.i = 0; this.i < postSnippets.length; this.i++) {
-      /**
-       * Creates Post Snippet object.
-       */
-      let currentPost = new PostSnippet(
-        postSnippets[this.i].id,
-        postSnippets[this.i].data.date,
-        postSnippets[this.i].data.date_string,
-        postSnippets[this.i].data.image,
-        postSnippets[this.i].data.title,
-        postSnippets[this.i].data.category
-      );
+      let currentPost = postSnippets[this.i];
 
       if (this.i === 0) {
         cardsHtml.push('<div class="card alpha depth-2" id="alpha" style="z-index:' + postSnippets.length.toString() + '" postId=' + currentPost.id + '>');
@@ -321,32 +337,22 @@ class PostHelper {
    * @param {number} pivot Position of the chosen post in the array of posts.
    */
   loadPost(id, selectedLanguage, pivot) {
-    this.toggleLoader();
+    UiHelper.toggleLoader();
     
     Promise.all([this.getPostById(id), this.getPosts()])
       .then((resp) => {
         // Assigns retrieved post to member variable currentPost
-      	this.currentPost = new Post(
-          resp[0].id,
-          resp[0].data.date,
-          resp[0].data.date_string,
-          resp[0].data.image,
-          resp[0].data.title,
-          resp[0].data.category,
-          resp[0].data.content
-        );
-        
+      	this.currentPost = resp[0];
         this.postSnippets = resp[1];
 
         // Fires Google Analytics tag via GTM
-        let googleTagManagerHelper = new GoogleTagManagerHelper();
         let event = 'post';
         let params = {
           postId : this.currentPost.id,
           postTitle : this.currentPost.title,
           postLanguage : selectedLanguage
         };
-        googleTagManagerHelper.fireTag(event, params);
+        GoogleTagManagerHelper.fireTag(event, params);
         
         // Prints post on page
         this.printPost(this.currentPost, selectedLanguage);
@@ -356,13 +362,12 @@ class PostHelper {
       	let cards = this.buildCardsFromPostSnippets(sortedPostSnippets);
       	this.layCards(cards);
       	this.addEventListeners(cards);
-      	this.toggleLoader();
+      	UiHelper.toggleLoader();
       })
       .catch((e) => {
-      	this.toggleLoader();
-      	let errorHandler = new ErrorHandler(1);
-      	errorHandler.displayError();
-      	console.log(e);
+      	UiHelper.toggleLoader();
+      	e.displayError();
+      	throw e;
       });
   } 
 }

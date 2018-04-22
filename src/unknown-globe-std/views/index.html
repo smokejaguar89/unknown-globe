@@ -8,15 +8,9 @@
   <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
   
   <!-- Google Tag Manager Data Layer -->
-  {% if post %}
-    <script>
-      dataLayer.push({
-        'postId' : '{{ post.id }}',
-        'postTitle' : '{{ post.data.title }}',
-        'postLanguage' : 'en'
-      });
+  <script>
+    dataLayer = [];
   </script>
-  {% endif %}
   
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -55,6 +49,9 @@
       <div class="header-title">
         un<span style="color:#FF5252">known</span>globe
       </div>
+      <div class="header-post-title" id="header-post-title">
+        {{ post.data.title }}
+      </div>
 
       <div class="header-loading-icon depth-1" id="header-icon">
         <img src="assets/globe.svg" class="globe-icon" id="globe-icon" alt="globe"/>
@@ -70,15 +67,16 @@
   
   <div class="cover-image depth-1">
     <div class="error-container depth-1" id="error"></div>
-    <a target="_blank" href="https://www.google.co.uk/maps/place/Litang,+Garze,+Sichuan,+China/@29.8222003,99.677608,9z/data=!3m1!4b1!4m5!3m4!1s0x371dc27ee9077b55:0xbc8a1d3ee2fa973d!8m2!3d29.996049!4d100.269817?hl=en">
-      <div class="cover-image-caption depth-1">
+    <a target="_blank" href="https://www.google.co.uk/maps/place/Tashkurgan,+Kashgar,+Xinjiang,+China/@37.7749249,75.1421656,10.86z/data=!4m5!3m4!1s0x38efaef9410fda05:0x22b5e226c8458a20!8m2!3d37.772094!4d75.229889?hl=en">
+      <div class="cover-image-caption-bg"></div>
+      <div class="cover-image-caption">
         <div class="cover-image-caption-img">
           <div class="cover-image-caption-img-ball depth-1">
-            <img src="/assets/pointer.png" width=100% height=100% />
+            <img src="/assets/pointer.png" width=100% height=100%  alt="Pointer" />
           </div>
         </div>
         <div class="cover-image-caption-text">
-          Litang, People's Republic of China
+          Tashkargan, Xinjiang, P.R. China
         </div>
       </div>
     </a>
@@ -160,37 +158,37 @@
               <div class="about-me-img depth-1"></div>
             </div>
             <div class="about-me-title">
-              Nicholas Hall<br>
+              Nicholas James Hall<br>
               <span style="font-size:14px;color:#999999;">
-                theologue@gmail.com
+                Couldn't have a more English name.
               </span>
             </div>
           </div>
           
           <div class="about-me-content">
-            Hey, I'm Nick. Born and bred Londoner. Currently living and working in Zürich, Switzerland as a Product Technology Manager at Google.<br><br>
-            This is my little place on the web to show off some travel pictures, write code without tests, rip off other people's ideas and murder the Polish language.
+            Hey, I'm Nick. Londoner. Currently living and working in Zürich, Switzerland as a Product Technology Manager at Google.<br><br>
+            This is my little place on the interwebs to write code without tests, rip off other people's ideas, murder the Polish language and hopefully write something interesting.
           </div>
           
           <div class="about-me-footer">
               <div class="about-me-footer-section">
                 <a target="_blank" href="https://www.facebook.com/nicholas.j.hall">
-                  <img src="/assets/fb.svg" width=22px height=22px />
+                  <img src="/assets/fb.svg" width=22px height=22px alt="Facebook" />
                 </a>
               </div>
               <div class="about-me-footer-section">
                 <a target="_blank" href="https://www.linkedin.com/in/nicholasjh/">
-                  <img src="/assets/li.svg" width=22px height=22px />
+                  <img src="/assets/li.svg" width=22px height=22px alt="LinkedIn" />
                 </a>
               </div>
               <div class="about-me-footer-section">
                 <a target="_blank" href="https://www.instagram.com/nicholasjameshall/">
-                  <img src="/assets/ig.svg" width=22px height=22px />
+                  <img src="/assets/ig.svg" width=22px height=22px alt="Instagram" />
                 </a>
               </div>
               <div class="about-me-footer-section">
                 <a target="_blank" href="https://github.com/smokejaguar89">
-                  <img src="/assets/gh.png" width=22px height=22px />
+                  <img src="/assets/gh.png" width=22px height=22px alt="GitHub" />
                 </a>
               </div>
           </div>
@@ -207,7 +205,22 @@
       let postHelper = new PostHelper();
       postHelper.addEventListeners();      
     })();
+    
+    window.onscroll = function() {
+      UiHelper.toggleHeaderPostTitle();
+    };
+    
   </script>
+  
+  {% if post %}
+    <script>
+      dataLayer.push({
+        'postId' : '{{ post.id }}',
+        'postTitle' : '{{ post.data.title }}',
+        'postLanguage' : 'en'
+      });
+  </script>
+  {% endif %}
 
 </body>
 

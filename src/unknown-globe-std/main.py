@@ -94,9 +94,33 @@ class GetPosts(webapp2.RequestHandler):
     
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json.dumps({'message': posts}))
+        
+class TestData(webapp2.RequestHandler):
+    def get(self):
+        datastore_helper = DatastoreHelper()
+        
+        p1 = Post(date=datetime.datetime.now(),
+                  image="test.jpg",
+                  title="Test 1",
+                  category=1,
+                  en="En",
+                  pl="Pl",
+                  pt="Pt")
+                  
+        p2 = Post(date=datetime.datetime.now(),
+                  image="test.jpg",
+                  title="Test 2",
+                  category=2,
+                  en="En",
+                  pl="Pl",
+                  pt="Pt")
+                  
+        p1.put()
+        p2.put()
     
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/getpost/(.*?)', GetPost),
-    ('/getposts/', GetPosts)
+    ('/getposts/', GetPosts),
+    ('/test/', TestData)
 ], debug=True)

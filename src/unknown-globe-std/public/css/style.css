@@ -45,8 +45,16 @@
         position:relative;
         font-size:16px;
         color:white;
+        display:inline;
         line-height:46px;
-        float:left;
+      }
+      
+      .header-post-title {
+      	position:relative;
+      	font-size:16px;
+      	color:#999999;
+      	display:none;
+      	line-height:46px;
       }
 
       .globe-icon {
@@ -101,22 +109,23 @@
           .about-me-img-container {
             width:calc(20%-16px);
             padding:8px;
-            float:left;
           }
           
             .about-me-img {
-              height:60px;
-              width:60px;
+              height:120px;
+              width:120px;
               border-radius:60px;
-              background-image:url('https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAp_AAAAJGJiNTc0ZDczLWI3NGUtNDZmYi04NzFkLTc4MjA0NWZmMzAxOQ.jpg');
+              background-image:url('../assets/me.JPG');
               background-position:center;
-              background-size:cover;      
+              background-size:cover;
+              margin:auto;
             }
           
           .about-me-title {
             width:calc(80%-16px);
             padding:8px;
-            float:left;
+            margin:auto;
+            text-align:center;
             font-size:22px;
             line-height:22px;
           }
@@ -151,15 +160,28 @@
       float:left;
       position:relative;
       background-color:#FF5252;
-      background-image:url('../assets/litang.JPG');
+      background-image:url('../assets/yurt.jpg');
       background-size:cover;
       background-position:center bottom;
       background-attachment: fixed;
       background-repeat: no-repeat;
     }
     
-      .cover-image-caption {
+      .cover-image-caption-bg {
         z-index:2;
+        width:168px;
+        border-radius:2px;
+        height:28px;
+        padding:16px;
+        background-color:#333333;
+        opacity:0.6;
+        position:absolute;
+        top:80px;
+        right:40px;
+      }
+    
+      .cover-image-caption {
+        z-index:3;
         width:168px;
         border-radius:2px;
         height:28px;
@@ -169,7 +191,7 @@
         right:40px;
         font-size:12px;
         display:flex;
-        background-color:white;
+        color:white
       }
       
         .cover-image-caption-img {
@@ -179,8 +201,9 @@
           .cover-image-caption-img-ball {
             height:20px;
             width:20px;
-            border-radius:28px;
-            padding:4px;
+            border-radius:32px;
+            padding:6px;
+            background-color:#333333;
           }
         
         .cover-image-caption-text {
