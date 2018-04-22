@@ -27,6 +27,9 @@ class ErrorHandler extends Error {
   }
 }
 
+/**
+ * Class containing static functions for UI manipulation.
+ */
 class UiHelper {
   constructor() {}
   
@@ -50,12 +53,12 @@ class UiHelper {
    * Toggles post title in the nav-bar.
    */
   static toggleHeaderPostTitle() {
-  	let postTitle = document.getElementById('header-post-title');
+  	let headerPostTitle = document.getElementById('header-post-title');
   	
   	if(window.scrollY > 440) {
-  	  postTitle.style.display = "inline";
+  	  headerPostTitle.style.display = "inline";
   	} else {
-  	  postTitle.style.display = "none";
+  	  headerPostTitle.style.display = "none";
   	}
   }
 }
@@ -323,11 +326,13 @@ class PostHelper {
    * @param {string} selectedLanguage Language of content to print on page.
    */
   printPost(post, selectedLanguage) {
-    let titleDiv = document.getElementById('post-title');
-    let contentDiv = document.getElementById('post-content');
+  	let headerPostTitleDiv = document.getElementById('header-post-title');
+    let postTitleDiv = document.getElementById('post-title');
+    let postContentDiv = document.getElementById('post-content');
 
-    titleDiv.innerHTML = post.getTitle();
-    contentDiv.innerHTML = post.getContentByLanguage(selectedLanguage);
+    headerPostTitleDiv.innerHTML = post.getTitle();
+    postTitleDiv.innerHTML = post.getTitle();
+    postContentDiv.innerHTML = post.getContentByLanguage(selectedLanguage);
   }
 
   /**
@@ -352,6 +357,7 @@ class PostHelper {
           postTitle : this.currentPost.title,
           postLanguage : selectedLanguage
         };
+        
         GoogleTagManagerHelper.fireTag(event, params);
         
         // Prints post on page
