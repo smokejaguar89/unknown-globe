@@ -5,14 +5,15 @@
  */
 class ErrorHandler extends Error {
   /**
-   * @param {number} id ID of the error.
+   * @param {status} HTTP response status.
+   * @param {message} Error message.
    */
   constructor(status, message) {
     super();
     this.name = status;
     this.message = message;
   }
-  
+
   /**
    * Displays external error message for three seconds.
    */
@@ -30,9 +31,7 @@ class ErrorHandler extends Error {
 /**
  * Class containing static functions for UI manipulation.
  */
-class UiHelper {
-  constructor() {}
-  
+class UiHelper {  
   /** 
    * Toggles loading animation.
    */
@@ -48,7 +47,7 @@ class UiHelper {
       spinner.style.display = 'block';
     }
   }
-  
+
   /**
    * Toggles post title in the nav-bar.
    */
@@ -66,9 +65,7 @@ class UiHelper {
 /**
  * Class to help with tag firing events.
  */
-class GoogleTagManagerHelper {
-  constructor() {}
-  
+class GoogleTagManagerHelper {  
   /**
    * Fires tag by pushing event into global data layer.
    * @param {event} event Event name to trigger tag.
@@ -84,25 +81,21 @@ class GoogleTagManagerHelper {
  * Class to help with HTTP requests.
  */
 class HttpHelper {
-  constructor() {
-    this.xhr = new XMLHttpRequest();
-  }
-
   /**
    * Builds query string.
    * @param {object} data Data to construct into query string.
    * @return {string} Query string.
    */
-  buildQueryString(data) {
+  static _buildQueryString(data) {
     if (Object.keys(data).length > 0) {
       return '?' + Object.keys(data).map(function(key) {
         return [key, data[key]].map(encodeURIComponent).join("=");
       }).join("&");
     }
-    
+
     return "";
   }
-  
+
   /**
    * Builds URI to make request.
    * @param {string} base Base URI (domain).
@@ -110,7 +103,7 @@ class HttpHelper {
    * @param {object} params Query string parameters.
    * @return {string} Finalised URL.
    */
-  buildUri(base, action, params={}) {
+  static buildUri(base, action, params={}) {
   	let path = action + '/';
 
   	if('id' in params) {
@@ -118,26 +111,31 @@ class HttpHelper {
   	  delete params['id'];
   	}
 
-    return base + '/' + path + this.buildQueryString(params);
+    return base + '/' + path + HttpHelper._buildQueryString(params);
   }
 
   /**
    * Makes GET request.
    * @param {string} uri URL to make GET request to (including query string).
-   * @return {object} JSON response from server.
+   * @return {Promise} JSON response from server.
    */
-  get(uri) {
-    return new Promise((resolve, reject) => {    	
-      this.xhr.open("GET", uri, true);
-      this.xhr.onreadystatechange = function() {
+  static get(uri) {
+    return new Promise((resolve, reject) => {
+      let xhr = new XMLHttpRequest();
+      xhr.open("GET", uri);
+      xhr.setRequestHeader('Cache-Control', 'public');
+      xhr.setRequestHeader('Cache-Control', 'max-age=86400');
+      xhr.onreadystatechange = function() {
         if (this.readyState === 4 && this.status >= 200) {
           resolve(JSON.parse(this.response));
         }
       };
-      this.xhr.onerror = () => {
-        reject(new ErrorHandler(this.status, this.statusText));
+      xhr.onerror = () => {
+      	console.log(xhr.status);
+      	console.log(xhr.statusText);
+        reject(new ErrorHandler(xhr.status, xhr.statusText));
       };
-      this.xhr.send();
+      xhr.send();
     });
   }
 }
@@ -147,7 +145,10 @@ class HttpHelper {
  */
 class PostHelper {
   constructor() {
-  	this.baseUri = 'https://unknown-globe.appspot.com';
+    this.BASE_URI = 'https://unknown-globe.appspot.com';
+    this.GET_POSTS = 'getposts';
+    this.GET_POST = 'getpost';	
+    this.currentPost;
     this.postSnippets;
   }
 
@@ -162,12 +163,11 @@ class PostHelper {
         resolve(this.postSnippets);
       });
     }
-    
-    let httpHelper = new HttpHelper();
-    let uri = httpHelper.buildUri(this.baseUri, 'getposts', params);
+
+    let uri = HttpHelper.buildUri(this.BASE_URI, this.GET_POSTS, params);
 
     return new Promise((resolve, reject) => {
-      httpHelper.get(uri)
+      HttpHelper.get(uri)
         .then((resp) => {	
           resolve(resp.message.map((item) => {
             return new PostSnippet(
@@ -192,11 +192,16 @@ class PostHelper {
    * @return {Post} Post returned from API.
    */
   getPostById(id) {
-    let httpHelper = new HttpHelper();
-    let uri = httpHelper.buildUri(this.baseUri, 'getpost', { 'id' : id });
+  	if(typeof this.currentPost !== "undefined" && this.currentPost.id === id) {
+  	  return new Promise((resolve) => {
+  	    resolve(this.currentPost);
+  	  });
+  	}
+  	
+    let uri = HttpHelper.buildUri(this.BASE_URI, this.GET_POST, { 'id' : id });
 
     return new Promise((resolve, reject) => {
-      httpHelper.get(uri)
+      HttpHelper.get(uri)
         .then((resp) => {
             resolve(new Post(
               resp.message.id,
@@ -212,29 +217,13 @@ class PostHelper {
           reject(e);
         });
     });
-    
   }
 
   /**
-   * Converts UNIX timestamp to human-readable format.
-   * @param {number} timestamp UNIX timestamp.
-   * @return {string} Time in human-readable format.
-   */
-  timeConverter(timestamp) {
-    let a = new Date(timestamp);
-    let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    let year = a.getFullYear();
-    let month = months[a.getMonth()];
-    let date = a.getDate();
-    let formattedTime = date + ' ' + month + ' ' + year;
-    return formattedTime;
-  }
-
-  /**
-   * Moves item at position <pivot> to beginning of array <postSnippets> and orders
-   *  remaining posts by date
+   * Moves item at position <pivot> to position 0 of array <postSnippets> and orders
+   *  remaining posts by date in descending order.
    * @param {Array<PostSnippet>} postSnippets Post snippets to be shuffled.
-   * @param {number} pivot Position of the post to move to front of <postSnippets>.
+   * @param {number} pivot Position of the post to move to position 0 of <postSnippets>.
    * @return {Array<PostSnippet>} Shuffled post snippets.
    */
   sortPostSnippets(postSnippets, pivot) {
@@ -246,7 +235,7 @@ class PostHelper {
     postSnippets.splice(0, 0, alpha);
     return postSnippets;
   }
-  
+
   /**
    * Takes posts as input and builds cards from their content.
    * @param {Array<PostSnippet>} postSnippets Post Snippets from which to build cards.
@@ -290,7 +279,7 @@ class PostHelper {
     let cardContainer = document.getElementById('stack');
     cardContainer.innerHTML = cards;
   }
-  
+
   /**
    * Adds click event listeners to cards in the stack.
    */
@@ -338,15 +327,14 @@ class PostHelper {
   /**
    * Loads selected post and prints on to page. Sorts post snippets.
    * @param {number} id ID of post to retrieve.
-   * @param {string} selectedLanguage Language of content to print.
-   * @param {number} pivot Position of the chosen post in the array of posts.
+   * @param {string} selectedLanguage Language of content to load.
+   * @param {number} pivot Current position of selected post in snippet array.
    */
   loadPost(id, selectedLanguage, pivot) {
     UiHelper.toggleLoader();
-    
+
     Promise.all([this.getPostById(id), this.getPosts()])
       .then((resp) => {
-        // Assigns retrieved post to member variable currentPost
       	this.currentPost = resp[0];
         this.postSnippets = resp[1];
 
@@ -357,13 +345,14 @@ class PostHelper {
           postTitle : this.currentPost.title,
           postLanguage : selectedLanguage
         };
-        
+
+        console.log("Tag fired?");
         GoogleTagManagerHelper.fireTag(event, params);
         
         // Prints post on page
         this.printPost(this.currentPost, selectedLanguage);
 
-        // Assembles and lays post snippet cards
+        // Assembles and lays cards for each post snippet
         let sortedPostSnippets = this.sortPostSnippets(this.postSnippets, pivot);
       	let cards = this.buildCardsFromPostSnippets(sortedPostSnippets);
       	this.layCards(cards);
@@ -375,5 +364,5 @@ class PostHelper {
       	e.displayError();
       	throw e;
       });
-  } 
+  }
 }
